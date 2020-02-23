@@ -1,0 +1,88 @@
+# This fixture should exercise all supported configuration options.
+Data:
+  Session:
+    File: testdata/dynamic/path/to/boone/session
+Template:
+  debounce_profile: 10s
+  custom_timeout: 20m
+AutoStartTarget:
+  - target 2 id
+Global:
+  Cooldown: "10s"
+  Exclude:
+    - Pattern: global/exclude/0/glob
+    - Pattern: global/exclude/1/glob
+Target:
+  # Exercise:
+  # - Multiple handler commands
+  # - Multiple include/exclude globs
+  # - Target.Id
+  # - Include without custom root
+  # - Exclude without custom root
+  # - Template variable expansion in Debounce, Handler.Exec.Timeout
+  - Label: target 0 label
+    Root: 'testdata/dynamic/target/0'
+    Debounce: '{{.debounce_profile}}'
+    Id: target 0 id
+    Include:
+      - Pattern: include/0/glob
+      - Pattern: include/1/glob
+    Exclude:
+      - Pattern: exclude/0/glob
+      - Pattern: exclude/1/glob
+    Handler:
+      - Label: target 0 handler 0 label
+        Exec:
+          - Cmd: target 0 handler 0 cmd
+            Timeout: '{{.custom_timeout}}'
+      - Label: target 0 handler 1 label
+        Exec:
+          - Cmd: target 0 handler 1 cmd
+  # Exercise:
+  # - Multiple filesystem operations included/excluded
+  # - Upstream-target based trigger
+  # - Include glob with a root to limit the ancestor inclusion scope
+  # - Exclude with custom root.
+  # - Target.Id is missing and will get auto-generated
+  # - Per-command Timeout
+  - Label: target 1 label
+    Root: ./testdata/dynamic/target/1
+    Debounce: 5s
+    Include:
+      - Pattern: include/0/glob
+        Root: include/0/root
+    Exclude:
+      - Pattern: exclude/0/glob
+        Root: exclude/0/root
+    Upstream:
+      - target 0 id
+    Handler:
+      - Label: target 1 handler 0 label
+        Exec:
+          - Cmd: target 1 handler 0 cmd
+            Timeout: 6m
+  # Exercise:
+  # - Multiple downstreams for a given target (target 0 id)
+  - Label: target 2 label
+    Id: target 2 id
+    Root: ./testdata/dynamic/target/2
+    Upstream:
+      - target 0 id
+    Handler:
+      - Label: target 2 handler 0 label
+        Exec:
+          - Cmd: target 2 handler 0 cmd
+  # Exercise:
+  # - Downstream found recursively (starting at "target 0 id")
+  # - Custom Exec.Dir
+  - Label: target 3 label
+    Id: target 3 id
+    Root: ./testdata/dynamic/target/3
+    Upstream:
+      - target 2 id
+    Handler:
+      - Label: target 3 handler 0 label
+        Exec:
+          - Cmd: target 3 handler 0 cmd
+          - Cmd: target 3 handler 1 cmd
+            Dir: some/rel/dir

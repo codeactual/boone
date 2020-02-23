@@ -1,0 +1,5 @@
+**/testdata/cover/*.html
+**/testdata/dynamic
+*.log
+/build
+cover.out
