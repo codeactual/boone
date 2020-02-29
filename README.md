@@ -1,6 +1,6 @@
 # boone [![GoDoc](https://godoc.org/github.com/codeactual/boone?status.svg)](https://pkg.go.dev/mod/github.com/codeactual/boone) [![Go Report Card](https://goreportcard.com/badge/github.com/codeactual/boone)](https://goreportcard.com/report/github.com/codeactual/boone) [![Build Status](https://travis-ci.org/codeactual/boone.png)](https://travis-ci.org/codeactual/boone)
 
-boone runs commands based on file-activity and declared dependency between monitored code trees. It started as a personal CI tool, so its approach is heavily biased toward that use case even if the configuration options appear general purpose.
+boone runs arbitrary commands based on file-activity and declared dependency between monitored code trees. It started as a personal CI tool, so its approach is heavily biased toward that use case even if the configuration options appear general purpose.
 
 - Terminal-based UI focused on issues that require attention.
 - Configuration of targets with glob inclusion/exclusion patterns, debounce control, multi-command sequences, pipeline commands, and target dependencies.
